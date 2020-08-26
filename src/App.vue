@@ -1,23 +1,24 @@
 <template>
 	<div>
-		<div>n的值是{{n}}</div>
-		<div class="row">
-			<Cell v-on:click="onClickCell(0,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(1,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(2,$event)" v-bind:n="n" />
+		<div class="wrapper">
+			<div>第{{n}}手</div>
+			<div class="row">
+				<Cell @click="onClickCell(0,$event)" :n="n" />
+				<Cell v-on:click="onClickCell(1,$event)" v-bind:n="n" :end="end" />
+				<Cell v-on:click="onClickCell(2,$event)" v-bind:n="n" :end="end" />
+			</div>
+			<div class="row">
+				<Cell v-on:click="onClickCell(3,$event)" v-bind:n="n" :end="end" />
+				<Cell v-on:click="onClickCell(4,$event)" v-bind:n="n" :end="end" />
+				<Cell v-on:click="onClickCell(5,$event)" v-bind:n="n" :end="end" />
+			</div>
+			<div class="row">
+				<Cell v-on:click="onClickCell(6,$event)" v-bind:n="n" :end="end" />
+				<Cell v-on:click="onClickCell(7,$event)" v-bind:n="n" :end="end" />
+				<Cell v-on:click="onClickCell(8,$event)" v-bind:n="n" :end="end" />
+			</div>
+			<div>对弈结果：{{result === null ? '未分胜负' : result + '胜出'}}</div>
 		</div>
-		<div class="row">
-			<Cell v-on:click="onClickCell(3,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(4,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(5,$event)" v-bind:n="n" />
-		</div>
-		<div class="row">
-			<Cell v-on:click="onClickCell(6,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(7,$event)" v-bind:n="n" />
-			<Cell v-on:click="onClickCell(8,$event)" v-bind:n="n" />
-		</div>
-		<div>{{map}}</div>
-		<div>{{result}}</div>
 	</div>
 </template>
 
@@ -36,19 +37,19 @@ export default {
 				[null, null, null],
 				[null, null, null],
 			],
-			result: false,
+			result: null,
+			end: "",
 		};
 	},
 	methods: {
 		onClickCell(i, text) {
-			console.log(`我是第${i}号,我的内容是${text}`);
 			this.map[Math.floor(i / 3)][i % 3] = text;
 			this.n += 1;
 			this.tell();
 		},
 		tell() {
 			const map = this.map;
-			for (let i = 0; i < 2; i++) {
+			for (let i = 0; i < map.length; i++) {
 				if (
 					map[i][0] !== null &&
 					map[i][0] === map[i][1] &&
@@ -57,7 +58,7 @@ export default {
 					this.result = map[i][0];
 				}
 			}
-			for (let j = 0; j < 2; j++) {
+			for (let j = 0; j < map.length; j++) {
 				if (
 					map[0][j] !== null &&
 					map[0][j] === map[1][j] &&
@@ -73,7 +74,6 @@ export default {
 			) {
 				this.result = map[0][0];
 			}
-
 			if (
 				map[0][2] !== null &&
 				map[0][2] === map[1][1] &&
@@ -81,12 +81,21 @@ export default {
 			) {
 				this.result = map[0][2];
 			}
+			if(this.result){
+				this.end = "finish"
+			}
 		},
 	},
 };
 </script>
 
 <style>
+.wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
 .row {
 	display: flex;
 }

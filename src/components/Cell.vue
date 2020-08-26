@@ -1,16 +1,14 @@
 <template>
 	<div>
-		{{n}}
 		<div class="cell" v-on:click="onClickSelf">
 			<template v-if="a">{{text}}</template>
-			<template v-else></template>
 		</div>
 	</div>
 </template>
 
 <script>
 export default {
-	props: ["n"],
+	props: ["n","end"],
 	data() {
 		return { a: false, text: "" };
 	},
@@ -19,9 +17,13 @@ export default {
 			if (this.text !== "") {
 				return;
 			}
-			this.a = true;
-			this.text = this.n % 2 !== 0 ? "X" : "O";
-			this.$emit("click", this.text);
+			if (this.end === "finish") {
+				this.a = false;
+			} else {
+				this.a = true;
+				this.text = this.n % 2 !== 0 ? "X" : "O";
+				this.$emit("click", this.text);
+			}
 		},
 	},
 };
